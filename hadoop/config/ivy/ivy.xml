@@ -1,13 +1,17 @@
-<ivy-module version="2.0">
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/extra">
     <info organisation="com.linkedin" module="whiteelephant"/>
     <configurations>
       <conf name="common" description="libraries to include in the fat jar" />
       <conf name="hadoop" description="for hadoop, won't fat jar, only needed for building" />
     </configurations>
     <dependencies>
-        <dependency org="org.apache.avro" name="avro" rev="1.7.2" conf="common->default"/>
-        <dependency org="org.apache.avro" name="avro-mapred" rev="1.7.2" conf="common->default"/>
-        <dependency org="org.apache.avro" name="avro-compiler" rev="1.7.2" conf="common->default"/>
+        <!-- https://issues.apache.org/jira/browse/AVRO-1170 -->
+        <dependency org="org.apache.avro" name="avro" rev="1.7.3" conf="common->default"/>
+        <dependency org="org.apache.avro" name="avro-mapred" rev="1.7.3" m:classsifier="hadoop2" conf="common->default">
+            <artifact name="avro-mapred" type="jar" ext="jar" url="http://repo.maven.apache.org/maven2/org/apache/avro/avro-mapred/1.7.3/avro-mapred-1.7.3-hadoop2.jar"/>
+        </dependency>
+        <dependency org="org.apache.avro" name="avro-compiler" rev="1.7.3" conf="common->default"/>
+
         <dependency org="org.testng" name="testng" rev="6.0.1" conf="common->default"/>        
         <dependency org="commons-logging" name="commons-logging" rev="1.1.1" conf="common->default"/>
         <dependency org="log4j" name="log4j" rev="1.2.17" conf="common->default"/>
@@ -18,8 +22,11 @@
         <dependency org="com.google.guava" name="guava" rev="13.0.1" conf="common->default"/>
         <dependency org="org.easymock" name="easymock" rev="3.1" conf="common->default"/>
 
-        <dependency org="org.apache.hadoop" name="hadoop-core" rev="1.0.3" conf="hadoop->default"/>
-        <dependency org="org.apache.hadoop" name="hadoop-tools" rev="1.0.3" conf="hadoop->default"/>
+        <dependency org="org.apache.hadoop" name="hadoop-client" rev="2.0.0-mr1-cdh4.0.1" conf="hadoop->default">
+          <exclude org="org.apache.avro"/>
+        </dependency>
+        <dependency org="org.apache.hadoop" name="hadoop-tools" rev="2.0.0-mr1-cdh4.0.1" conf="hadoop->default"/>
         <dependency org="com.hadoop.gplcompression" name="hadoop-lzo" rev="0.4.15" conf="hadoop->default"/>
+
     </dependencies>
 </ivy-module>

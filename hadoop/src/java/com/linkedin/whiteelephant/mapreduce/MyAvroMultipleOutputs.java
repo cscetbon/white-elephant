@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Collections;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.mapreduce.task.TaskAttemptContextImpl;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.RecordWriter;
@@ -424,7 +425,7 @@ public class MyAvroMultipleOutputs{
   public void write(Object key, Object value, String baseOutputPath) 
       throws IOException, InterruptedException {
     checkBaseOutputPath(baseOutputPath);
-    TaskAttemptContext taskContext = new TaskAttemptContext(
+    TaskAttemptContext taskContext = new TaskAttemptContextImpl(
       context.getConfiguration(), context.getTaskAttemptID());
     getRecordWriter(taskContext, baseOutputPath).write(key, value);
   }
@@ -503,7 +504,7 @@ public class MyAvroMultipleOutputs{
       else
         AvroJob.setOutputValueSchema(job,valSchema);
     }
-    taskContext = new TaskAttemptContext(
+    taskContext = new TaskAttemptContextImpl(
       job.getConfiguration(), context.getTaskAttemptID());
     
     taskContexts.put(nameOutput, taskContext);
