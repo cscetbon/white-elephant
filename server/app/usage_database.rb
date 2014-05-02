@@ -71,9 +71,9 @@ class UsageDatabase
         statement.execute_update(%|
           CREATE TABLE Usage 
           (
-            userName varchar(12) NOT NULL,
+            userName varchar(200) NOT NULL,
             time TIMESTAMP NOT NULL,
-            cluster varchar(12) NOT NULL,
+            cluster varchar(50) NOT NULL,
             excess BOOLEAN NOT NULL,
             type varchar(10) NOT NULL,
             status varchar(10) NOT NULL,
@@ -94,7 +94,7 @@ class UsageDatabase
           CREATE TABLE LoadedFiles 
           (
             id INTEGER NOT NULL IDENTITY,
-            fileName varchar(500) NOT NULL,
+            fileName CHAR VARYING(5000) NOT NULL,
             modified TIMESTAMP NOT NULL
           ) 
           |)

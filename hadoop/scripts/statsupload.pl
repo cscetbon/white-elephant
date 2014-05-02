@@ -52,7 +52,7 @@ sub prefilter {
 
     my $path = "$HADOOP_DEST/$GRID/daily/$queue/$Year/${Month}${Day}";
 
-    my $cmd = "$HADOOP dfs -lsr $path";
+    my $cmd = "$HADOOP dfs -ls -R $path";
 
     print "$cmd\n";
 
@@ -127,6 +127,7 @@ sub wanted {
             push( @NONXMLS, $j );
         }
     }
+    #elsif (-f $j) { $ftime = ( stat( $j ) )[9]; print $j,' ', $OLDERTHAN - $ftime, ' ', $ftime - $NEWERTHAN, $/ }
     return 1;
 }
 sub findqueue {
@@ -197,7 +198,7 @@ if ( -r $CONFIG ) {
     }
     if ( exists( $cfg::CFG{'hadoop_home'} ) ) {
         $HADOOP_HOME = $cfg::CFG{'hadoop_home'};
-        $HADOOP      = "$HADOOP_HOME/bin/hadoop";
+        $HADOOP      = "$HADOOP_HOME/bin/hdfs";
     } else {
         die( "Make sure 'hadoop_home' is set in your config file" );
     }
@@ -301,9 +302,22 @@ do {
         if ( !$queue ) { next; }
 
         $ftime = ( stat( $logfile ) )[9];
+=for comment
         ( $day, $month, $year ) = ( localtime( $ftime ) )[3, 4, 5];
         $year  += 1900;
         $month += 1;
+=cut
+        if($logfile=~/job_(\d{4})(\d{2})(\d{2})\d{4}_\d{4}/)
+        {
+          ( $day, $month, $year ) = ($3,$2,$1);
+        }
+        else
+        {
+          ( $day, $m, $y ) = ( localtime( $ftime ) )[3, 4, 5];
+          $y += 1900;
+          $m += 1;
+        }
+
         $hdfsname = pathbuilder( "daily", $GRID, $year, $month, $day, $queue, $job_name ) . ".log";
         
         # as that is missing from keys in %DIRSTRUCT

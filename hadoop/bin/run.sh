@@ -44,12 +44,17 @@ fi
 
 CLASSPATH=$HADOOP_CONF_DIR
 
-for jar in $(find -H $HADOOP_LIB_DIR -name '*.jar');
+for jar in $(find -H $HADOOP_LIB_DIR/../hadoop* -name '*.jar');
 do
   CLASSPATH=$CLASSPATH:$jar
 done;
 
 for jar in $(find $home_dir -name '*.jar');
+do
+  CLASSPATH=$CLASSPATH:$jar
+done;
+
+for jar in $(find /home/ubuntu/white-elephant/hadoop/lib/hadoop -name '*.jar');
 do
   CLASSPATH=$CLASSPATH:$jar
 done;
